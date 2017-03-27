@@ -7,6 +7,7 @@
 #include <vector>       // std::vector
 #include <queue>          // std::queue
 #include <sys/time.h>
+#include <stdio.h>
 
 using namespace std;
 
