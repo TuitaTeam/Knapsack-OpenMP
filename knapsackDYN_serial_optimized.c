@@ -26,7 +26,9 @@ static int knapSack(long int W, long int N, int wt[], int val[])
 			else
 				K[w] = Kp[w];
 		}
-		memcpy(Kp, K, (W+1)*sizeof(int));
+		int *tmp = Kp;
+		Kp = K;
+		K = tmp;
 	}
 
 	int result = K[W];
