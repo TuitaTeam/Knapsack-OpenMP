@@ -29,7 +29,12 @@ static int knapSack(long int W, long int N, int wt[], int val[])
 		memcpy(Kp, K, (W+1)*sizeof(int));
 	}
 
-	return K[W];
+	int result = K[W];
+
+	free(K);
+	free(Kp);
+
+	return result;
 }
 
 int main(int argc, char **argv){
