@@ -4,17 +4,17 @@ OMP_TARGET_DYN=knapsackDYN_omp
 
 all : serial omp
 
-serial : serial-dyn serial-bb
+serial : $(SERIAL_TARGET_DYN) $(SERIAL_TARGET_BB)
 
-serial-dyn : knapsackDYN_serial_optimized.c
+$(SERIAL_TARGET_DYN) : knapsackDYN_serial_optimized.c
 	gcc knapsackDYN_serial_optimized.c -o $(SERIAL_TARGET_DYN)
 
-serial-bb : knapsackBB_serial.cpp
+$(SERIAL_TARGET_BB) : knapsackBB_serial.cpp
 	g++ knapsackBB_serial.cpp -o $(SERIAL_TARGET_BB)
 
-omp : omp-dyn
+omp : $(OMP_TARGET_DYN)
 
-omp-dyn : knapsackDYN_omp.c
+$(OMP_TARGET_DYN) : knapsackDYN_omp.c
 	gcc -fopenmp knapsackDYN_omp.c -o $(OMP_TARGET_DYN)
 
 clean :
