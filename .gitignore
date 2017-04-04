@@ -41,3 +41,6 @@ knapsackDYN_omp
 
 # Vim tmp file
 *.swp
+
+# Test files
+testbed/
