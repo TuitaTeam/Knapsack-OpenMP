@@ -5,7 +5,7 @@
 #include <iostream>     // std::cout
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
-#include <queue>          // std::queue
+#include <stack>          // std::stack
 #include <sys/time.h>
 #include <stdio.h>
 
@@ -86,7 +86,7 @@ int knapsack(int W, Item arr[], int n)
 	sort(arr, arr + n, cmp);
 
 	// make a queue for traversing the node
-	queue<Node> Q;
+	stack<Node> Q;
 	Node u, v;
 
 	// dummy node at starting
@@ -101,7 +101,7 @@ int knapsack(int W, Item arr[], int n)
 	while (!Q.empty())
 	{
 		// Dequeue a node
-		u = Q.front();
+		u = Q.top();
 		Q.pop();
 
 		// If it is starting node, assign level 0
