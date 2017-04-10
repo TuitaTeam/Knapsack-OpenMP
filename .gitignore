@@ -34,6 +34,8 @@
 
 # Binaries
 knapsackBB_serial
+knapsackBB_omp
+knapsackBB_parallel
 knapsackDYN_serial
 knapsackDYN_serial_optimized
 knapsackDYN_parallel
