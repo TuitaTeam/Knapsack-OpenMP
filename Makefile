@@ -26,4 +26,4 @@ $(OMP_TARGET_BB) : knapsackBB_omp.cpp
 	g++ -fopenmp knapsackBB_omp.cpp -o $(OMP_TARGET_BB)
 
 clean :
-	rm $(SERIAL_TARGET_DYN) $(OMP_TARGET_DYN) $(SERIAL_TARGET_BB) $(OMP_TARGET_BB)
+	rm -rf $(SERIAL_TARGET_DYN) $(OMP_TARGET_DYN) $(SERIAL_TARGET_BB) $(OMP_TARGET_BB)
