@@ -8,6 +8,7 @@
 #include <stack>          // std::stack
 #include <sys/time.h>
 #include <stdio.h>
+#include <omp.h>
 
 using namespace std;
 
@@ -87,57 +88,71 @@ int knapsack(int W, Item arr[], int n)
 
 	// make a queue for traversing the node
 	stack<Node> Q;
-	Node u, v1, v2;
 
 	// dummy node at starting
-	u.level = -1;
-	u.profit = u.weight = 0;
-	Q.push(u);
+	Node dummy;
+	dummy.level = -1;
+	dummy.profit = dummy.weight = 0;
+	Q.push(dummy);
 
 	// One by one extract an item from decision tree
 	// compute profit of all children of extracted item
 	// and keep saving maxProfit
 	int maxProfit = 0;
-	while (!Q.empty())
+	#pragma omp parallel reduction(max:maxProfit)
 	{
-		// Dequeue a node
-		u = Q.top();
-		Q.pop();
+		Node u, v1, v2;
+		while (true)
+		{
+			bool queueIsEmpty;
+			#pragma omp critical
+			{
+				if (!(queueIsEmpty = Q.empty())) {
+					// Dequeue a node
+					u = Q.top();
+					Q.pop();
+				}
+			}
+			if (queueIsEmpty) break;
 
-		// If there is nothing on next level
-		if (u.level == n-1)
-			continue;
+			// If there is nothing on next level
+			if (u.level == n-1)
+				continue;
 
-		// Else if not last node, then increment level,
-		// and compute profit of children nodes.
-		v1.level = u.level + 1;
-		v2.level = u.level + 1;
+			// Else if not last node, then increment level,
+			// and compute profit of children nodes.
+			v1.level = u.level + 1;
+			v2.level = u.level + 1;
 
-		v1.weight = u.weight;
-		v1.profit = u.profit;
-		v1.bound = bound(v1, n, W, arr);
+			v1.weight = u.weight;
+			v1.profit = u.profit;
+			v1.bound = bound(v1, n, W, arr);
 
-		// Taking current level's item add current
-		// level's weight and value to node u's
-		// weight and value
-		v2.weight = u.weight + arr[v2.level].weight;
-		v2.profit = u.profit + arr[v2.level].value;
-		v2.bound = bound(v2, n, W, arr);
+			// Taking current level's item add current
+			// level's weight and value to node u's
+			// weight and value
+			v2.weight = u.weight + arr[v2.level].weight;
+			v2.profit = u.profit + arr[v2.level].value;
+			v2.bound = bound(v2, n, W, arr);
 
-		// If cumulated weight is less than W and
-		// profit is greater than previous profit,
-		// update maxprofit
-		if (v2.weight <= W && v2.profit > maxProfit)
-			maxProfit = v2.profit;
+			// If cumulated weight is less than W and
+			// profit is greater than previous profit,
+			// update maxprofit
+			if (v2.weight <= W && v2.profit > maxProfit)
+				maxProfit = v2.profit;
 
-		// If bound value is greater than profit,
-		// then only push into queue for further
-		// consideration
-		if (v1.bound > maxProfit)
-			Q.push(v1);
+			// If bound value is greater than profit,
+			// then only push into queue for further
+			// consideration
+			#pragma omp critical
+			{
+				if (v1.bound > maxProfit)
+					Q.push(v1);
 
-		if (v2.bound > maxProfit)
-			Q.push(v2);
+				if (v2.bound > maxProfit)
+					Q.push(v2);
+			}
+		}
 	}
 
 	return maxProfit;
