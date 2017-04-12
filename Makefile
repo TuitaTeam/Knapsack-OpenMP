@@ -5,6 +5,10 @@ OMP_TARGET_BB=knapsackBB_omp
 
 all : serial omp
 
+dyn : $(SERIAL_TARGET_DYN) $(OMP_TARGET_DYN)
+
+bb : $(SERIAL_TARGET_BB) $(OMP_TARGET_BB)
+
 serial : $(SERIAL_TARGET_DYN) $(SERIAL_TARGET_BB)
 
 $(SERIAL_TARGET_DYN) : knapsackDYN_serial_optimized.c
