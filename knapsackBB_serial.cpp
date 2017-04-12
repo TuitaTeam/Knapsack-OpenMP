@@ -87,7 +87,7 @@ int knapsack(int W, Item arr[], int n)
 
 	// make a queue for traversing the node
 	stack<Node> Q;
-	Node u, v;
+	Node u, v1, v2;
 
 	// dummy node at starting
 	u.level = -1;
@@ -104,47 +104,40 @@ int knapsack(int W, Item arr[], int n)
 		u = Q.top();
 		Q.pop();
 
-		// If it is starting node, assign level 0
-		if (u.level == -1)
-			v.level = 0;
-
 		// If there is nothing on next level
 		if (u.level == n-1)
 			continue;
 
 		// Else if not last node, then increment level,
 		// and compute profit of children nodes.
-		v.level = u.level + 1;
+		v1.level = u.level + 1;
+		v2.level = u.level + 1;
+
+		v1.weight = u.weight;
+		v1.profit = u.profit;
+		v1.bound = bound(v1, n, W, arr);
 
 		// Taking current level's item add current
 		// level's weight and value to node u's
 		// weight and value
-		v.weight = u.weight + arr[v.level].weight;
-		v.profit = u.profit + arr[v.level].value;
+		v2.weight = u.weight + arr[v2.level].weight;
+		v2.profit = u.profit + arr[v2.level].value;
+		v2.bound = bound(v2, n, W, arr);
 
 		// If cumulated weight is less than W and
 		// profit is greater than previous profit,
 		// update maxprofit
-		if (v.weight <= W && v.profit > maxProfit)
-			maxProfit = v.profit;
-
-		// Get the upper bound on profit to decide
-		// whether to add v to Q or not.
-		v.bound = bound(v, n, W, arr);
+		if (v2.weight <= W && v2.profit > maxProfit)
+			maxProfit = v2.profit;
 
 		// If bound value is greater than profit,
 		// then only push into queue for further
 		// consideration
-		if (v.bound > maxProfit)
-			Q.push(v);
+		if (v1.bound > maxProfit)
+			Q.push(v1);
 
-		// Do the same thing, but Without taking
-		// the item in knapsack
-		v.weight = u.weight;
-		v.profit = u.profit;
-		v.bound = bound(v, n, W, arr);
-		if (v.bound > maxProfit)
-			Q.push(v);
+		if (v2.bound > maxProfit)
+			Q.push(v2);
 	}
 
 	return maxProfit;
