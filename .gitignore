@@ -46,3 +46,7 @@ knapsackDYN_omp
 
 # Test files
 testbed/
+
+# Results
+output/
+errors/
