@@ -50,3 +50,6 @@ testbed/
 # Results
 output/
 errors/
+
+# Problems
+problems/
