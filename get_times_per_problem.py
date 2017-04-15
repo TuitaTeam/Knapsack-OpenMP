@@ -2,6 +2,10 @@
 
 import sys
 
+if len(sys.argv) != 2:
+    print "Usage:", sys.argv[0], "<results_file.csv>"
+    exit(1)
+
 f = open(sys.argv[1], 'r')
 
 results = {}
